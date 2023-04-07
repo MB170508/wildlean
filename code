@@ -1,7 +1,3 @@
-
-
-
-
 local players = game:GetService("Players") --// players
 local local_player = players.LocalPlayer --// localplayer
 local mouse = local_player:GetMouse() --// mouse
@@ -55,6 +51,8 @@ circle.Color = Color3.new(176, 42, 88)
     end
 --// end of functions
 
+local is_visible = true --// keep track of whether the circle is visible
+
 do --// events
     do --// input changed
 
@@ -64,16 +62,13 @@ do --// events
                 circle.Position = Vector2.new(current_camera.ViewportSize.x / 2, current_camera.ViewportSize.y / 2)
             end
         end)
-    end
-end
 
-do --// silent aim
-    local old = global_module.Utils.GetMouseHit
-    global_module.Utils.GetMouseHit = function(...)
-        if closest_to_cursor(hitboxes)[1] and closest_to_cursor(hitboxes)[2] then
-            return closest_to_cursor(hitboxes)[2].Position
-        else
-            return old(...)
-        end
+        -- toggle circle visibility when AltGr is pressed
+        user_input_service.InputBegan:connect(function(input, game_processed)
+            if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.RightAlt and not game_processed then
+                is_visible = not is_visible
+                circle.Visible = is_visible
+            end
+        end)
     end
 end

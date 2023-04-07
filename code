@@ -72,3 +72,13 @@ do --// events
         end)
     end
 end
+do --// silent aim
+    local old = global_module.Utils.GetMouseHit
+    global_module.Utils.GetMouseHit = function(...)
+        if closest_to_cursor(hitboxes)[1] and closest_to_cursor(hitboxes)[2] then
+            return closest_to_cursor(hitboxes)[2].Position
+        else
+            return old(...)
+        end
+    end
+end
